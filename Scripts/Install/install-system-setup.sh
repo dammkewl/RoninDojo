@@ -70,114 +70,6 @@ sudo chmod +x ~/RoninDojo/Scripts/Menu/*
 
 echo -e "${RED}"
 echo "***"
-echo "Formatting the SSD..."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-
-ls /dev | grep sda > ~/sda_tmp.txt
-# temp file looking for sda
-
-sda1=$( grep -ic "sda1" ~/sda_tmp.txt )
-if [ $sda1 -eq 1 ]
-then
-  echo "Found sda1, using wipefs."
-  sudo wipefs --all --force /dev/sda1
-fi
-# if sda1 exists, use wipefs to erase possible sig
-
-rm ~/sda_tmp.txt
-# remove temp file
-
-sudo dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
-# wipes partition table
-
-sudo sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk /dev/sda
-  n # new partition
-  p # primary partition
-  1 # partition number 1
-    # default - start at beginning of disk
-    # default, extend partition to end of disk
-  w # write the partition table
-EOF
-# to create the partitions programatically (rather than manually)
-# we're going to simulate the manual input to fdisk
-# The sed script strips off all the comments so that we can
-# document what we're doing in-line with the actual commands
-# Note that a blank line (commented as "defualt" will send a empty
-# line terminated with a newline to take the fdisk default.
-
-echo -e "${RED}"
-echo "***"
-echo "Using ext4 format for /dev/sda1 partition..."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-sudo mkfs.ext4 /dev/sda1
-# format partion1 to ext4
-
-echo -e "${RED}"
-echo "***"
-echo "Editing /etc/fstab to input UUID for sda1 and adjust settings..."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-
-lsblk -o UUID,NAME | grep sda1 >> ~/uuid.txt
-# this will look up uuid of sda1 and makes txt file with that value
-
-sed -i 's/ └─sda1//g' ~/uuid.txt
-# removes the text sda1 after the uuid in txt file
-
-sed -i 1's|$| /mnt/usb ext4 rw,nosuid,dev,noexec,noatime,nodiratime,noauto,x-systemd.automount,nouser,async,nofail 0 2 &|' ~/uuid.txt
-# adds a necessary line with the path and other options after the uuid in txt file
-
-sed -i 's/^/UUID=/' ~/uuid.txt
-# adds UUID= prefix to the front of the line
-
-cat ~/uuid.txt | sudo tee -a /etc/fstab > /dev/null
-# even with sudo cant get permission to pipe cat output into /etc/fstab, so using sudo tee -a
-
-rm ~/uuid.txt
-# delete txt file
-
-echo -e "${RED}"
-echo "***"
-echo "Creating /mnt/usb directory..."
-echo "***"
-echo -e "${NC}"
-sudo mkdir /mnt/usb
-sleep 2s
-
-echo -e "${RED}"
-echo "***"
-echo "Mounting drive..."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-sudo mount /dev/sda1 /mnt/usb
-# mount main storage drive to /mnt/usb directory
-
-echo -e "${RED}"
-echo "***"
-echo "Displaying the name on the external disk..."
-echo "***"
-echo -e "${NC}"
-lsblk -o UUID,NAME,FSTYPE,SIZE,LABEL,MODEL
-sleep 2s
-# double-check that /dev/sda exists, and that its storage capacity is what you expected
-
-echo -e "${RED}"
-echo "***"
-echo "Check output for /dev/sda1 and make sure everything looks ok."
-echo "***"
-echo -e "${NC}"
-df -h
-sleep 2s
-# checks disk info
-
-echo -e "${RED}"
-echo "***"
 echo "Checking for Python... "
 echo "***"
 echo -e "${NC}"
@@ -238,11 +130,11 @@ ip addr | sed -rn '/state UP/{n;n;s:^ *[^ ]* *([^ ]*).*:\1:;s:[^.]*$:0/24:p}' > 
 
 cat ~/ip_tmp.txt | while read ip ; do echo "### tuple ### allow any 22 0.0.0.0/0 any ""$ip" > ~/rule_tmp.txt; done
 # pipes output from ip_tmp.txt into read, then uses echo to make next text file with needed changes plus the ip address
-# for line 19 in /etc/ufw/user.rules
+# for line 19 in /etc/ufw/user.rules 
 
 cat ~/ip_tmp.txt | while read ip ; do echo "-A ufw-user-input -p tcp --dport 22 -s "$ip" -j ACCEPT" >> ~/rule_tmp.txt; done
 # pipes output from ip_tmp.txt into read, then uses echo to make next text file with needed changes plus the ip address
-# for line 20 /etc/ufw/user.rules
+# for line 20 /etc/ufw/user.rules 
 
 cat ~/ip_tmp.txt | while read ip ; do echo "-A ufw-user-input -p udp --dport 22 -s "$ip" -j ACCEPT" >> ~/rule_tmp.txt; done
 # pipes output from ip_tmp.txt into read, then uses echo to make next text file with needed changes plus the ip address
@@ -258,7 +150,7 @@ sudo awk 'NR==2{a=$0}NR==FNR{next}FNR==20{print a}1' ~/rule_tmp.txt /etc/ufw/use
 # copying from line 2 in rule_tmp.txt to line 20 in /etc/ufw/user.rules
 
 sudo awk 'NR==3{a=$0}NR==FNR{next}FNR==21{print a}1' ~/rule_tmp.txt /etc/ufw/user.rules > ~/user.rules_tmp.txt && sudo mv ~/user.rules_tmp.txt /etc/ufw/user.rules
-# copying from line 3 in rule_tmp.txt to line 21 in /etc/ufw/user.rules
+# copying from line 3 in rule_tmp.txt to line 21 in /etc/ufw/user.rules 
 
 sudo sed -i "18G" /etc/ufw/user.rules
 # adds a space to keep things formatted nicely
@@ -309,31 +201,6 @@ echo -e "${NC}"
 sleep 2s
 # ufw setup ends
 
-# docker setup starts
-
-echo -e "${RED}"
-echo "***"
-echo "Now configuring docker to use the external SSD..."
-echo "***"
-echo -e "${NC}"
-sleep 3s
-sudo mkdir /mnt/usb/docker
-# makes directroy to store docker/dojo data
-
-sudo mkdir /etc/docker
-# makes docker directory, or gives error if already exists to verify
-
-sudo echo "{" > ~/daemon.json
-sudo echo '                  "data-root": "/mnt/usb/docker"' >> ~/daemon.json
-sudo echo "}" >> ~/daemon.json
-# using echo > to create file with first line, then using echo >> to append following two lines
-
-cat ~/daemon.json | sudo tee -a /etc/docker/daemon.json > /dev/null
-# even with sudo cant get permission to pipe cat output into /etc/fstab, so using sudo tee -a
-
-rm ~/daemon.json
-# removes temp file
-
 echo -e "${RED}"
 echo "***"
 echo "Checking docker version..."
@@ -357,15 +224,6 @@ sudo systemctl enable docker
 # sleep here to avoid error systemd[1]: Failed to start Docker Application Container Engine
 # see systemctl status docker.service and journalctl -xe for details on error
 
-echo -e "${RED}"
-echo "***"
-echo "Check that docker is using the SSD."
-echo "***"
-echo -e "${NC}"
-sleep 3s
-sudo docker info | grep "Docker Root Dir:"
-sleep 3s
-# if not showing SSD path check above
 # docker setup ends
 echo -e "${RED}"
 echo "***"
