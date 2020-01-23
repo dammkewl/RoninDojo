@@ -129,31 +129,6 @@ sleep 2s
 sudo pacman -S --noconfirm tor
 # install tor
 
-# edit torrc
-echo -e "${RED}" 
-echo "***"
-echo "Editing torrc..."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-sudo sed -i '52d' /etc/tor/torrc
-sudo sed -i '52i DataDirectory /mnt/usb/tor' /etc/tor/torrc
-sudo sed -i '56d' /etc/tor/torrc
-sudo sed -i '56i ControlPort 9051' /etc/tor/torrc
-sudo sed -i '60d' /etc/tor/torrc
-sudo sed -i '60i CookieAuthentication 1' /etc/tor/torrc
-sudo sed -i '61i CookieAuthFileGroupReadable 1' /etc/tor/torrc
-sudo mkdir /mnt/usb/tor/
-sudo chown -R tor:tor /mnt/usb/tor/
-
-echo -e "${RED}"
-echo "***"
-echo "Restarting..."
-echo "***"
-sleep 2s
-sudo systemctl restart tor
-sleep 5s
-
 echo -e "${RED}" 
 echo "***"
 echo "Obtain the Whirlpool Pairing Code in Samourai Wallet. Go to Settings > Transactions > Pair to Whirlpool."
