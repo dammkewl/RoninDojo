@@ -207,45 +207,10 @@ EOF
 }
 
 #
-# Docker Data Directory
+# Docker setup
 #
-_docker_datadir_setup() {
-    cat <<EOF
-${RED}
-***
-Now configuring docker to use the external SSD...
-***
-${NC}
-EOF
-    _sleep 3
-    test -d /mnt/usb/docker || sudo mkdir /mnt/usb/docker
-    # makes directory to store docker/dojo data
-
-    if [ -d /etc/docker ]; then
-        cat <<EOF
-${RED}
-***
-The /etc/docker directory already exists.
-***
-${NC}
-EOF
-    else
-        cat <<EOF
-${RED}
-***
-Creating /etc/docker directory.
-***
-${NC}
-EOF
-        sudo mkdir /etc/docker
-        # makes docker directory
-    fi
-
-    # We can skip this if daemon.json was previous created
-    if [ ! -f /etc/docker/daemon.json ]; then
-        sudo bash -c 'cat << EOF > /etc/docker/daemon.json
-{ "data-root": "/mnt/usb/docker" }
-EOF'
+_docker_setup() {
+    if ! systemctl is-active docker 1>/dev/null; then # is docker started?
         cat <<EOF
 ${RED}
 ***
@@ -253,8 +218,6 @@ Starting docker daemon.
 ***
 ${NC}
 EOF
-        sudo systemctl start docker || return 1
-    elif ! systemctl is-active docker 1>/dev/null; then # is docker started?
         sudo systemctl start docker || return 1
     fi
 
