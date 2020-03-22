@@ -21,7 +21,7 @@ echo "***"
 echo "Use Ctrl+C to exit if needed!"
 echo "***"
 echo -e "${NC}"
-sleep 27s
+sleep 1s
 
 cd ~/dojo/docker/my-dojo
 sudo ./dojo.sh stop
@@ -29,7 +29,10 @@ sudo chown -R $USER:$USER ~/dojo/*
 mkdir ~/.dojo > /dev/null 2>&1
 cd ~/.dojo
 sudo rm -rf samourai-dojo > /dev/null 2>&1
-git clone https://code.samourai.io/Ronin/samourai-dojo.git
+git clone https://github.com/Samourai-Wallet/samourai-dojo.git
+cd samourai-dojo
+git checkout v1.5.0
+cd ..
 cp -rv samourai-dojo/* ~/dojo
 # stop dojo and prepare for upgrade
 
@@ -95,30 +98,8 @@ elif cat ~/dojo/docker/my-dojo/conf/docker-indexer.conf | grep "INDEXER_INSTALL=
         echo "***"
         echo -e "${NC}"
 fi
-# install indexer
 
-if [ ! -f ~/dojo/docker/my-dojo/indexer/electrs.toml ] ; then
-   read -p "Do you want to install Electrs? [y/n]" yn
-   case $yn in
-       [Y/y]* ) bash ~/RoninDojo/Scripts/Menu/menu-dojo-electrs-upgrade.sh;;
-       [N/n]* ) echo -e "${RED}"
-                echo "***"
-                echo "Electrs will not be installed!"
-                echo "***"
-                echo -e "${NC}";;
-       * ) echo "Please answer Yes or No.";;
-    esac
-else
-   echo -e "${RED}"
-   echo "***"
-   echo "Electrs is already installed!"
-   echo "***"
-   echo -e "${NC}"
-   sleep 3s
-   bash ~/RoninDojo/Scripts/Menu/menu-dojo-electrs-upgrade.sh
-fi
-# install electrs
-
+# Run upgrade
 cd ~/dojo/docker/my-dojo
 sudo ./dojo.sh upgrade
 # run upgrade
