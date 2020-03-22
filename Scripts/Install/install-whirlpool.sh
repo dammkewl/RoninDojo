@@ -30,38 +30,6 @@ fi
 
 echo -e "${RED}"
 echo "***"
-echo "Checking if Tor is installed..."
-echo "***"
-echo -e "${NC}"
-
-if hash tor; then
-    echo -e "${RED}"
-    echo "***"
-    echo "The tor package is installed."
-    echo "***"
-    echo -e "${NC}"
-else
-    echo -e "${RED}"
-    echo "***"
-    echo "The tor package will be installed now."
-    echo "***"
-    echo -e "${NC}"
-    sudo pacman -S --noconfirm tor
-    _sleep
-    sudo sed -i -e 's/^DataDirectory .*$/DataDirectory /mnt/usb/tor' \
-    -e 's/^ControlPort .*$/ControlPort 9051' \
-    -e 's/^#CookieAuthentication/CookieAuthentication/' \
-    -e '/CookieAuthentication/a CookieAuthFileGroupReadable 1' /etc/tor/torrc
-
-    if [ ! -d /mnt/usb/tor ]; then
-        sudo mkdir /mnt/usb/tor
-        sudo chown -R tor:tor /mnt/usb/tor
-    fi
-fi
-# check if tor is installed, if not install and modify torrc
-
-echo -e "${RED}"
-echo "***"
 echo "Installing Whirlpool..."
 echo "***"
 echo -e "${NC}"
