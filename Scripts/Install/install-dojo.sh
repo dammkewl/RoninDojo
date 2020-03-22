@@ -48,6 +48,9 @@ sleep 5s
 mkdir ~/.dojo
 cd ~/.dojo
 git clone -b master https://github.com/Samourai-Wallet/samourai-dojo.git
+cd samourai-dojo
+git checkout v1.4.1
+cd ..
 sleep 2s
 
 echo -e "${RED}"
