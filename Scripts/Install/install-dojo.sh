@@ -47,7 +47,7 @@ cd ~
 sleep 5s
 mkdir ~/.dojo
 cd ~/.dojo
-git clone -b master https://github.com/RoninDojo/samourai-dojo.git
+git clone -b master https://github.com/Samourai-Wallet/samourai-dojo.git
 sleep 2s
 
 echo -e "${RED}"
@@ -67,14 +67,6 @@ echo "***"
 echo -e "${NC}"
 sleep 2s
 rm -rvf samourai-dojo/
-sleep 1s
-
- # creating a 1GB swapfile
-sudo fallocate -l 1G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-sudo sed -i '20i /swapfile none swap defaults 0 0' /etc/fstab
 
 echo -e "${RED}"
 echo "***"
