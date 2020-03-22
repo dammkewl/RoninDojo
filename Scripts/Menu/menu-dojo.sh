@@ -143,13 +143,12 @@ case $CHOICE in
             mkdir ~/.dojo > /dev/null 2>&1
             cd ~/.dojo
             sudo rm -rf samourai-dojo > /dev/null 2>&1
-            # Check if user has Electrs+Dojo installed
 
-            if [ ! -f /home/$USER/dojo/docker/my-dojo/conf/docker-electrs.conf ]; then
-                git clone -b master https://github.com/RoninDojo/samourai-dojo.git;
-            else
-                git clone -b feat_electrs https://github.com/RoninDojo/samourai-dojo.git;
-            fi
+            git clone -b master https://github.com/Samourai-Wallet/samourai-dojo.git;
+            cd samourai-dojo
+            git checkout v1.4.1
+            cd ..
+
             sudo cp -rv samourai-dojo/* ~/dojo
             # install new explorer
 
