@@ -16,7 +16,7 @@ MENU="Choose one of the following options:"
 
 OPTIONS=(1 "Dojo Menu"
          2 "Whirlpool Menu"
-         3 "Electrs Menu"
+         3 "Electrs Menu (not yet supported in dammkewl's fork)"
          4 "Firewall Menu"
          5 "System Menu"
          6 "System Setup & Installations")
