@@ -21,7 +21,7 @@ echo "***"
 echo "Use Ctrl+C to exit if needed!"
 echo "***"
 echo -e "${NC}"
-sleep 27s
+sleep 1s
 
 cd ~/dojo/docker/my-dojo
 sudo ./dojo.sh stop
@@ -29,7 +29,10 @@ sudo chown -R $USER:$USER ~/dojo/*
 mkdir ~/.dojo > /dev/null 2>&1
 cd ~/.dojo
 sudo rm -rf samourai-dojo > /dev/null 2>&1
-git clone https://code.samourai.io/Ronin/samourai-dojo.git
+git clone https://github.com/Samourai-Wallet/samourai-dojo.git
+cd samourai-dojo
+git checkout v1.5.0
+cd ..
 cp -rv samourai-dojo/* ~/dojo
 # stop dojo and prepare for upgrade
 
