@@ -21,16 +21,17 @@ echo "***"
 echo "Use Ctrl+C to exit if needed!"
 echo "***"
 echo -e "${NC}"
-sleep 27s
+sleep 1s
 
 cd ~/dojo/docker/my-dojo
 sudo ./dojo.sh stop
+cd ~
 sudo chown -R $USER:$USER ~/dojo/*
-mkdir ~/.dojo > /dev/null 2>&1
-cd ~/.dojo
-sudo rm -rf samourai-dojo > /dev/null 2>&1
-git clone https://code.samourai.io/Ronin/samourai-dojo.git
-cp -rv samourai-dojo/* ~/dojo
+#TODO: if .git folder not present, git clone into temp and copy .git folder into ~/dojo?
+cd dojo
+git fetch --all
+git reset --hard v1.5.0
+cd ..
 # stop dojo and prepare for upgrade
 
 echo -e "${RED}"

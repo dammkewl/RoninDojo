@@ -33,34 +33,15 @@ sleep 5s
 # start dojo setup
 echo -e "${RED}"
 echo "***"
-echo "Downloading and extracting latest Dojo release..."
+echo "Downloading and extracting Dojo 1.5 ..."
 echo "***"
 echo -e "${NC}"
 cd ~
-sleep 5s
-mkdir ~/.dojo
-cd ~/.dojo
-git clone -b master https://github.com/Samourai-Wallet/samourai-dojo.git
+git clone -b master https://github.com/Samourai-Wallet/samourai-dojo.git dojo
+cd dojo
+git checkout v1.5.0
+cd ..
 sleep 2s
-
-echo -e "${RED}"
-echo "***"
-echo "Making ~/dojo and copying data."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-mkdir ~/dojo
-cp -r samourai-dojo/* ~/dojo
-sleep 2s
-
-echo -e "${RED}"
-echo "***"
-echo "Removing all the files no longer needed."
-echo "***"
-echo -e "${NC}"
-sleep 2s
-rm -rf samourai-dojo/
-sleep 1s
 
 echo -e "${RED}"
 echo "***"
@@ -163,7 +144,7 @@ BITCOIND_ZMQ_RAWTXS=9501
 # Set value to 9502 if BITCOIND_INSTALL is set to 'on'
 # Type: integer
 BITCOIND_ZMQ_BLK_HASH=9502
-" | sudo tee -a ~/dojo/docker/my-dojo/conf/docker-bitcoind.conf.tpl
+" | tee -a ~/dojo/docker/my-dojo/conf/docker-bitcoind.conf.tpl
 
 # configuring ~/dojo/docker/my-dojo/conf/docker-node.conf.tpl
 echo -e "${RED}"
@@ -241,7 +222,7 @@ NODE_ACTIVE_INDEXER=local_bitcoind
 # FEE TYPE USED FOR FEES ESTIMATIONS BY BITCOIND
 # Allowed values are ECONOMICAL or CONSERVATIVE
 NODE_FEE_TYPE=ECONOMICAL
-" | sudo tee -a ~/dojo/docker/my-dojo/conf/docker-node.conf.tpl
+" | tee -a ~/dojo/docker/my-dojo/conf/docker-node.conf.tpl
 # Create new docker node conf file 
 
 rm -rf ~/dojo/docker/my-dojo/conf/docker-mysql.conf.tpl
@@ -265,7 +246,7 @@ MYSQL_USER=$MYSQL_USER
 # Password of of user account
 # Type: alphanumeric
 MYSQL_PASSWORD=$MYSQL_PASSWORD
-" | sudo tee -a ~/dojo/docker/my-dojo/conf/docker-mysql.conf.tpl
+" | tee -a ~/dojo/docker/my-dojo/conf/docker-mysql.conf.tpl
 # Create new mysql conf file
 
 # BTC-EXPLORER PASSWORD
@@ -317,7 +298,7 @@ EXPLORER_INSTALL=on
 # Provide a value with a high entropy!
 # Type: alphanumeric
 EXPLORER_KEY=$EXPLORER_KEY
-" | sudo tee -a ~/dojo/docker/my-dojo/conf/docker-explorer.conf.tpl
+" | tee -a ~/dojo/docker/my-dojo/conf/docker-explorer.conf.tpl
 # create new block explorer conf file
 
 read -p "Do you want to install an indexer? [y/n]" yn
