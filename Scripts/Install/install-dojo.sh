@@ -20,11 +20,11 @@ _sleep 10
 
 echo -e "${RED}"
 echo "***"
-echo "Downloading and extracting latest RoninDojo release..."
+echo "Downloading and extracting Dojo 1.7.0 ..."
 echo "***"
 echo -e "${NC}"
 cd "$HOME" || exit
-git clone -b "${SAMOURAI_BRANCH:-master}" "$SAMOURAI_REPO" dojo
+git clone -b v1.7.0 "$SAMOURAI_REPO" dojo
 
 echo -e "${RED}"
 echo "***"
