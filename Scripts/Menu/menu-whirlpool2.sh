@@ -88,7 +88,7 @@ case $CHOICE in
             cd ~/whirlpool
             sudo systemctl stop whirlpool > /dev/null 2>&1
             sudo rm -rf *.jar
-            wget -O whirlpool.jar https://github.com/Samourai-Wallet/whirlpool-client-cli/releases/download/0.10.4/whirlpool-client-cli-0.10.4-run.jar
+            wget -O whirlpool.jar https://github.com/Samourai-Wallet/whirlpool-client-cli/releases/download/0.10.5/whirlpool-client-cli-0.10.5-run.jar
             sudo systemctl start whirlpool
             echo -e "${RED}"
             echo "***"
