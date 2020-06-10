@@ -189,7 +189,7 @@ EOF
 #!/bin/bash
 sudo rm -rf "$HOME/RoninDojo"
 cd "$HOME"
-git clone -b "${RONIN_DOJO_BRANCH:-master}" https://code.samourai.io/ronindojo/RoninDojo
+git clone -b "${RONIN_DOJO_BRANCH:-master}" https://code.samourai.io/dammkewl/RoninDojo
 ${RED}
 ***
 Upgrade Complete!
