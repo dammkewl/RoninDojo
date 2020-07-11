@@ -9,10 +9,6 @@ NC=$(tput sgr0)
 # Main function runs at beginning of script execution
 #
 _main() {
-    # Source update script
-    . "$HOME"/RoninDojo/Scripts/update.sh
-
-    _update_01 # Check for bridge-utils version update
 
     # Create symbolic link for main ronin script
     if [ ! -h /usr/local/bin/ronin ]; then
